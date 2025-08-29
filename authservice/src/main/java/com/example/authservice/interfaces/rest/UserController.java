@@ -1,5 +1,6 @@
 package com.example.authservice.interfaces.rest;
 
+import com.example.authservice.application.user.GetUserByIdHandler;
 import com.example.authservice.application.user.ListUserHandler;
 import com.example.authservice.application.user.RegisterUserHandler;
 import com.example.authservice.domain.user.User;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ import java.net.URI;
 public class UserController {
     private final ListUserHandler listUserHandler;
     private final RegisterUserHandler registerUserHandler;
+    private final GetUserByIdHandler getUserByIdHandler;
 
     @GetMapping
     public ResponseEntity<Page<UserResponse>> list(Pageable pageable) {
@@ -37,7 +40,14 @@ public class UserController {
         );
 
         return ResponseEntity
-                .created(URI.create("/users" + created.id()))
+                .created(URI.create("/users/" + created.id()))
                 .body(created);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getById(@PathVariable UUID id) {
+        UserResponse user = getUserByIdHandler.handle(id);
+
+        return ResponseEntity.ok(user);
     }
 }
