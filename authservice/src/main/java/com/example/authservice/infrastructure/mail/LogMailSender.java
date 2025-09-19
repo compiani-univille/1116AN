@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 
 @Component
-@Profile({"local"})
+@Profile({"local", "dev", "test"})
 public class LogMailSender implements MailSender {
     private static final Logger log = LoggerFactory.getLogger(LogMailSender.class);
 

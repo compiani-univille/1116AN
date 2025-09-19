@@ -9,6 +9,8 @@ import com.example.authservice.domain.user.User;
 import com.example.authservice.domain.user.UserRepository;
 import com.example.authservice.domain.user.vo.Email;
 import com.example.authservice.infrastructure.config.AppProperties;
+import com.example.authservice.support.Digests;
+import com.example.authservice.support.RandomTokenGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +38,8 @@ public class RequestMagicLinkHandler {
         }
 
         User user = userOpt.get();
-        String token = "";
-        String hash = "";
+        String token = RandomTokenGenerator.urlSafeToken(32);
+        String hash = Digests.sha256Hex(token);
 
         Instant now = Instant.now();
         long ttl = appProperties.getMagicLink().getTtlSeconds();
